@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Soochika – Panchayat Welfare Platform</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<!-- ── LOGIN SCREEN ─────────────────────────────────────────── -->
+<div id="login-screen" class="d-flex">
+  <!-- Left Side: Brand Panel -->
+  <div class="login-brand-panel d-none d-lg-flex flex-column justify-content-between p-5 text-white">
+    <div class="brand-header d-flex align-items-center gap-2">
+      <div class="brand-icon-large"><i class="bi bi-shield-heart-fill"></i></div>
+      <div>
+        <div class="brand-title">Soochika</div>
+        <div class="brand-subtitle">Panchayat Welfare Platform</div>
+      </div>
+    </div>
+    <div class="brand-body">
+      <h1 class="brand-heading mb-3">Empowering Communities,<br>Securing Futures.</h1>
+      <p class="brand-desc text-white-50">Efficiently manage beneficiary profiles, track welfare schemes, and plan healthcare outreach for Kazhakuttam Grama Panchayat.</p>
+    </div>
+    <div class="brand-footer d-flex gap-4">
+      <div>
+        <div class="footer-stat-val">1,248</div>
+        <div class="footer-stat-lbl">Beneficiaries</div>
+      </div>
+      <div>
+        <div class="footer-stat-val">82%</div>
+        <div class="footer-stat-lbl">Scheme Coverage</div>
+      </div>
+      <div>
+        <div class="footer-stat-val">8</div>
+        <div class="footer-stat-lbl">Wards Monitored</div>
+      </div>
+    </div>
+    <!-- Animated floating blobs in background -->
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+  </div>
+
+  <!-- Right Side: Login Card Form -->
+  <div class="login-form-panel d-flex align-items-center justify-content-center p-4 flex-grow-1">
+    <div class="login-glass-card p-4 p-md-5">
+      <div class="d-lg-none text-center mb-4">
+        <div class="brand-icon-large mx-auto mb-2 text-teal"><i class="bi bi-shield-heart-fill"></i></div>
+        <h2 class="fw-700 text-teal-dark mb-0">Soochika</h2>
+        <p class="text-muted small">Panchayat Welfare Platform</p>
+      </div>
+
+      <h3 class="fw-700 text-dark mb-2">Welcome Back</h3>
+      <p class="text-muted mb-4">Select an authentication method to log in.</p>
+
+      <!-- Auth Method Tabs -->
+      <div class="auth-tabs d-flex gap-2 mb-4">
+        <button class="auth-tab active" data-target="tab-credentials" onclick="switchAuthTab(this)">
+          <i class="bi bi-key-fill"></i> Credentials
+        </button>
+        <button class="auth-tab" data-target="tab-aadhaar" onclick="switchAuthTab(this)">
+          <i class="bi bi-card-text"></i> Aadhaar OTP
+        </button>
+        <button class="auth-tab" data-target="tab-biometric" onclick="switchAuthTab(this)">
+          <i class="bi bi-fingerprint"></i> Biometric
+        </button>
+      </div>
+
+      <!-- Tab 1: Credentials Form -->
+      <div id="tab-credentials" class="auth-tab-content active">
+        <div class="mb-3">
+          <label class="form-label">Username</label>
+          <div class="input-group">
+            <span class="input-group-text bg-transparent border-end-0 text-muted"><i class="bi bi-person"></i></span>
+            <input type="text" id="login-username" class="form-control border-start-0 ps-0" placeholder="e.g. anitha.ward7" value="anitha.ward7" />
+          </div>
+        </div>
+        <div class="mb-4">
+          <label class="form-label">Password</label>
+          <div class="input-group">
+            <span class="input-group-text bg-transparent border-end-0 text-muted"><i class="bi bi-lock"></i></span>
+            <input type="password" id="login-password" class="form-control border-start-0 ps-0" placeholder="••••••••" value="password123" />
+          </div>
+        </div>
+        <button class="btn btn-primary-custom w-100 py-2.5" onclick="loginWithPassword()">
+          Sign In <i class="bi bi-arrow-right-short ms-1"></i>
+        </button>
+      </div>
+
+      <!-- Tab 2: Aadhaar OTP Form -->
+      <div id="tab-aadhaar" class="auth-tab-content">
+        <div class="mb-3" id="aadhaar-input-group">
+          <label class="form-label">Aadhaar Number</label>
+          <div class="input-group">
+            <span class="input-group-text bg-transparent border-end-0 text-muted"><i class="bi bi-card-text"></i></span>
+            <input type="text" id="login-aadhaar" class="form-control border-start-0 ps-0" placeholder="12-digit Aadhaar number" />
+          </div>
+          <button class="btn btn-outline-primary-custom w-100 mt-3" onclick="sendAadhaarOtp()">
+            Send OTP
+          </button>
+        </div>
+        
+        <div class="mb-4 d-none" id="otp-input-group">
+          <label class="form-label">Enter 6-Digit OTP</label>
+          <div class="input-group mb-2">
+            <span class="input-group-text bg-transparent border-end-0 text-muted"><i class="bi bi-shield-lock"></i></span>
+            <input type="text" id="login-otp" class="form-control border-start-0 ps-0" placeholder="XXXXXX" maxlength="6" />
+          </div>
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <span class="text-muted small" id="otp-timer">Resend OTP in 60s</span>
+            <button class="btn btn-link p-0 text-teal small fw-600 border-0 bg-transparent d-none" id="btn-resend-otp" onclick="sendAadhaarOtp()">Resend</button>
+          </div>
+          <button class="btn btn-primary-custom w-100 py-2.5" onclick="verifyAadhaarOtp()">
+            Verify & Log In <i class="bi bi-check-lg ms-1"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Tab 3: Biometric -->
+      <div id="tab-biometric" class="auth-tab-content text-center py-3">
+        <div class="biometric-trigger-wrap mx-auto mb-4" onclick="triggerBiometric()">
+          <div class="biometric-icon">
+            <i class="bi bi-fingerprint"></i>
+          </div>
+          <div class="scanner-line"></div>
+        </div>
+        <p class="text-dark fw-600 mb-1" id="biometric-status">Click to Scan Fingerprint</p>
+        <p class="text-muted small">Supports Passkey, Touch ID, or Face ID</p>
+      </div>
+
+      <div class="mt-4 text-center">
+        <span class="text-muted small">Authorized personnel only. For assistance, contact GP Admin.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── SIDEBAR ───────────────────────────────────────────────── -->
+<div class="d-flex" id="app-wrapper">
+
+  <nav id="sidebar" class="d-flex flex-column">
+    <div class="sidebar-brand d-flex align-items-center gap-2">
+      <div class="brand-icon"><i class="bi bi-shield-heart-fill"></i></div>
+      <div>
+        <div class="brand-name">Soochika</div>
+        <div class="brand-sub">Welfare Platform</div>
+      </div>
+    </div>
+
+    <div class="panchayat-badge">
+      <i class="bi bi-geo-alt-fill me-1"></i> Kazhakuttam Grama Panchayat
+    </div>
+
+    <ul class="nav flex-column mt-3 flex-grow-1">
+      <li class="nav-section-label">MAIN</li>
+      <li class="nav-item">
+        <a href="#" class="nav-link active" onclick="showPage('dashboard')">
+          <i class="bi bi-grid-1x2-fill"></i> Dashboard
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="nav-link" onclick="showPage('beneficiaries')">
+          <i class="bi bi-people-fill"></i> Beneficiaries
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="nav-link" onclick="showPage('add')">
+          <i class="bi bi-person-plus-fill"></i> Add Beneficiary
+        </a>
+      </li>
+
+      <li class="nav-section-label mt-3">SERVICES</li>
+      <li class="nav-item">
+        <a href="#" class="nav-link" onclick="showPage('schemes')">
+          <i class="bi bi-patch-check-fill"></i> Welfare Schemes
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="nav-link" onclick="showPage('camps')">
+          <i class="bi bi-hospital-fill"></i> Health Camps
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="nav-link" onclick="showPage('alerts')">
+          <i class="bi bi-bell-fill"></i> Alerts
+          <span class="badge-dot ms-auto">3</span>
+        </a>
+      </li>
+
+      <li class="nav-section-label mt-3">REPORTS</li>
+      <li class="nav-item">
+        <a href="#" class="nav-link" onclick="showPage('analytics')">
+          <i class="bi bi-bar-chart-line-fill"></i> Analytics
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="nav-link" onclick="showPage('export')">
+          <i class="bi bi-download"></i> Export Data
+        </a>
+      </li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <div class="d-flex align-items-center gap-2">
+        <div class="user-avatar">AO</div>
+        <div>
+          <div class="user-name">Anitha Oommen</div>
+          <div class="user-role">Ward Officer</div>
+        </div>
+        <i class="bi bi-box-arrow-right ms-auto logout-icon"></i>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── MAIN CONTENT ───────────────────────────────────────── -->
+  <main id="main-content" class="flex-grow-1">
+
+    <!-- TOP BAR -->
+    <div class="topbar d-flex align-items-center justify-content-between">
+      <div class="d-flex align-items-center gap-3">
+        <button class="sidebar-toggle d-md-none" onclick="toggleSidebar()">
+          <i class="bi bi-list"></i>
+        </button>
+        <div class="page-title" id="page-title">Dashboard</div>
+      </div>
+      <div class="d-flex align-items-center gap-3">
+        <div class="search-wrap">
+          <i class="bi bi-search search-icon"></i>
+          <input type="text" class="form-control search-input" placeholder="Search beneficiary…"/>
+        </div>
+        <div class="topbar-date"><i class="bi bi-calendar3 me-1"></i>June 2026</div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════
+         PAGE: DASHBOARD
+    ════════════════════════════════════ -->
+    <div id="page-dashboard" class="page-content active">
+      <div class="container-fluid px-4 py-3">
+
+        <!-- Stat Cards -->
+        <div class="d-flex flex-wrap gap-3 mb-4">
+          <div class="stat-card flex-fill">
+            <div class="stat-icon bg-teal"><i class="bi bi-people-fill"></i></div>
+            <div class="stat-body">
+              <div class="stat-value">1,248</div>
+              <div class="stat-label">Total Beneficiaries</div>
+              <div class="stat-change up"><i class="bi bi-arrow-up-short"></i> 34 added this month</div>
+            </div>
+          </div>
+          <div class="stat-card flex-fill">
+            <div class="stat-icon bg-amber"><i class="bi bi-person-wheelchair"></i></div>
+            <div class="stat-body">
+              <div class="stat-value">387</div>
+              <div class="stat-label">Persons with Disabilities</div>
+              <div class="stat-change neutral"><i class="bi bi-dash"></i> 31.0% of total</div>
+            </div>
+          </div>
+          <div class="stat-card flex-fill">
+            <div class="stat-icon bg-green"><i class="bi bi-person-heart"></i></div>
+            <div class="stat-body">
+              <div class="stat-value">861</div>
+              <div class="stat-label">Elderly (60+)</div>
+              <div class="stat-change up"><i class="bi bi-arrow-up-short"></i> 69.0% of total</div>
+            </div>
+          </div>
+          <div class="stat-card flex-fill">
+            <div class="stat-icon bg-red"><i class="bi bi-exclamation-triangle-fill"></i></div>
+            <div class="stat-body">
+              <div class="stat-value">94</div>
+              <div class="stat-label">Pending Verification</div>
+              <div class="stat-change down"><i class="bi bi-arrow-down-short"></i> 12 resolved today</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Priority Alerts + Scheme Coverage -->
+        <div class="d-flex flex-wrap gap-3 mb-4">
+
+          <div class="content-card flex-grow-1" style="min-width:300px">
+            <div class="card-header-row d-flex justify-content-between align-items-center">
+              <span class="card-title">Priority Alerts</span>
+              <span class="see-all" onclick="showPage('alerts')">See all</span>
+            </div>
+            <div class="alert-list">
+              <div class="alert-item urgent">
+                <div class="alert-dot"></div>
+                <div class="flex-grow-1">
+                  <div class="alert-name">Omana P. (W-4)</div>
+                  <div class="alert-desc">No pension disbursement for 2 months. Immediate follow-up required.</div>
+                </div>
+                <span class="alert-tag urgent-tag">Urgent</span>
+              </div>
+              <div class="alert-item warning">
+                <div class="alert-dot warning-dot"></div>
+                <div class="flex-grow-1">
+                  <div class="alert-name">Rajan K. (W-7)</div>
+                  <div class="alert-desc">Medical certificate expiring in 14 days. Renewal needed.</div>
+                </div>
+                <span class="alert-tag warning-tag">Renewal</span>
+              </div>
+              <div class="alert-item warning">
+                <div class="alert-dot warning-dot"></div>
+                <div class="flex-grow-1">
+                  <div class="alert-name">3 beneficiaries in W-2</div>
+                  <div class="alert-desc">Not enrolled in Karunya scheme. Eligible based on income data.</div>
+                </div>
+                <span class="alert-tag info-tag">Scheme</span>
+              </div>
+              <div class="alert-item">
+                <div class="alert-dot neutral-dot"></div>
+                <div class="flex-grow-1">
+                  <div class="alert-name">Health Camp – Ward 5</div>
+                  <div class="alert-desc">Scheduled for 5 July 2026. 48 beneficiaries auto-notified.</div>
+                </div>
+                <span class="alert-tag info-tag">Camp</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="content-card" style="min-width:280px;flex:0 1 340px">
+            <div class="card-header-row d-flex justify-content-between align-items-center mb-3">
+              <span class="card-title">Scheme Coverage</span>
+              <span class="see-all">View schemes</span>
+            </div>
+            <div class="scheme-row">
+              <div class="scheme-name">Indira Gandhi Pension</div>
+              <div class="scheme-bar-wrap">
+                <div class="scheme-bar" style="width:82%"></div>
+              </div>
+              <div class="scheme-pct">82%</div>
+            </div>
+            <div class="scheme-row">
+              <div class="scheme-name">Disability Allowance</div>
+              <div class="scheme-bar-wrap">
+                <div class="scheme-bar amber-bar" style="width:61%"></div>
+              </div>
+              <div class="scheme-pct">61%</div>
+            </div>
+            <div class="scheme-row">
+              <div class="scheme-name">Karunya Health</div>
+              <div class="scheme-bar-wrap">
+                <div class="scheme-bar green-bar" style="width:74%"></div>
+              </div>
+              <div class="scheme-pct">74%</div>
+            </div>
+            <div class="scheme-row">
+              <div class="scheme-name">Aayushman Bharat</div>
+              <div class="scheme-bar-wrap">
+                <div class="scheme-bar amber-bar" style="width:55%"></div>
+              </div>
+              <div class="scheme-pct">55%</div>
+            </div>
+            <div class="scheme-row">
+              <div class="scheme-name">Food Security Card</div>
+              <div class="scheme-bar-wrap">
+                <div class="scheme-bar" style="width:91%"></div>
+              </div>
+              <div class="scheme-pct">91%</div>
+            </div>
+            <div class="coverage-summary mt-3">
+              <i class="bi bi-info-circle text-muted me-1"></i>
+              <span>94 beneficiaries are missing at least one eligible scheme.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ward Map + Recent Additions -->
+        <div class="d-flex flex-wrap gap-3 mb-4">
+          <div class="content-card flex-grow-1" style="min-width:300px">
+            <div class="card-header-row d-flex justify-content-between align-items-center mb-3">
+              <span class="card-title">Ward-wise Distribution</span>
+            </div>
+            <div class="ward-grid">
+              <div class="ward-cell" onclick="showPage('beneficiaries')">
+                <div class="ward-num">W-1</div>
+                <div class="ward-count">142</div>
+                <div class="ward-bar"><div class="ward-fill" style="height:72%"></div></div>
+                <div class="ward-label">72%</div>
+              </div>
+              <div class="ward-cell high" onclick="showPage('beneficiaries')">
+                <div class="ward-num">W-2</div>
+                <div class="ward-count">198</div>
+                <div class="ward-bar"><div class="ward-fill" style="height:100%"></div></div>
+                <div class="ward-label">Highest</div>
+              </div>
+              <div class="ward-cell" onclick="showPage('beneficiaries')">
+                <div class="ward-num">W-3</div>
+                <div class="ward-count">87</div>
+                <div class="ward-bar"><div class="ward-fill" style="height:44%"></div></div>
+                <div class="ward-label">44%</div>
+              </div>
+              <div class="ward-cell" onclick="showPage('beneficiaries')">
+                <div class="ward-num">W-4</div>
+                <div class="ward-count">165</div>
+                <div class="ward-bar"><div class="ward-fill" style="height:83%"></div></div>
+                <div class="ward-label">83%</div>
+              </div>
+              <div class="ward-cell low" onclick="showPage('beneficiaries')">
+                <div class="ward-num">W-5</div>
+                <div class="ward-count">62</div>
+                <div class="ward-bar"><div class="ward-fill low-fill" style="height:31%"></div></div>
+                <div class="ward-label">Needs survey</div>
+              </div>
+              <div class="ward-cell" onclick="showPage('beneficiaries')">
+                <div class="ward-num">W-6</div>
+                <div class="ward-count">134</div>
+                <div class="ward-bar"><div class="ward-fill" style="height:68%"></div></div>
+                <div class="ward-label">68%</div>
+              </div>
+              <div class="ward-cell" onclick="showPage('beneficiaries')">
+                <div class="ward-num">W-7</div>
+                <div class="ward-count">178</div>
+                <div class="ward-bar"><div class="ward-fill" style="height:90%"></div></div>
+                <div class="ward-label">90%</div>
+              </div>
+              <div class="ward-cell" onclick="showPage('beneficiaries')">
+                <div class="ward-num">W-8</div>
+                <div class="ward-count">112</div>
+                <div class="ward-bar"><div class="ward-fill" style="height:57%"></div></div>
+                <div class="ward-label">57%</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="content-card" style="min-width:280px;flex:0 1 360px">
+            <div class="card-header-row d-flex justify-content-between align-items-center mb-3">
+              <span class="card-title">Recently Added</span>
+              <span class="see-all" onclick="showPage('beneficiaries')">View all</span>
+            </div>
+            <div class="recent-list">
+              <div class="recent-row d-flex align-items-center gap-3">
+                <div class="recent-avatar female">KS</div>
+                <div class="flex-grow-1">
+                  <div class="recent-name">Kamala S.</div>
+                  <div class="recent-meta">74 · Elderly · Ward 3</div>
+                </div>
+                <span class="recent-badge elderly-badge">Elderly</span>
+              </div>
+              <div class="recent-row d-flex align-items-center gap-3">
+                <div class="recent-avatar male">VM</div>
+                <div class="flex-grow-1">
+                  <div class="recent-name">Vijayan M.</div>
+                  <div class="recent-meta">58 · PwD (Locomotor) · Ward 7</div>
+                </div>
+                <span class="recent-badge pwd-badge">PwD</span>
+              </div>
+              <div class="recent-row d-flex align-items-center gap-3">
+                <div class="recent-avatar female">SC</div>
+                <div class="flex-grow-1">
+                  <div class="recent-name">Sarada C.</div>
+                  <div class="recent-meta">81 · Elderly · Ward 1</div>
+                </div>
+                <span class="recent-badge elderly-badge">Elderly</span>
+              </div>
+              <div class="recent-row d-flex align-items-center gap-3">
+                <div class="recent-avatar male">RN</div>
+                <div class="flex-grow-1">
+                  <div class="recent-name">Rajan N.</div>
+                  <div class="recent-meta">67 · Elderly + PwD · Ward 5</div>
+                </div>
+                <span class="recent-badge combo-badge">Both</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════
+         PAGE: BENEFICIARIES
+    ════════════════════════════════════ -->
+    <div id="page-beneficiaries" class="page-content">
+      <div class="container-fluid px-4 py-3">
+
+        <div class="d-flex flex-wrap align-items-center gap-3 mb-4">
+          <div class="d-flex gap-2 flex-wrap flex-grow-1">
+            <select class="form-select filter-select" id="filter-ward" onchange="loadBeneficiaries()">
+              <option>All Wards</option>
+              <option>Ward 1</option><option>Ward 2</option><option>Ward 3</option>
+              <option>Ward 4</option><option>Ward 5</option><option>Ward 6</option>
+              <option>Ward 7</option><option>Ward 8</option>
+            </select>
+            <select class="form-select filter-select" id="filter-category" onchange="loadBeneficiaries()">
+              <option>All Categories</option>
+              <option>Elderly (60+)</option>
+              <option>Person with Disability</option>
+              <option>Both</option>
+            </select>
+            <select class="form-select filter-select" id="filter-scheme" onchange="loadBeneficiaries()">
+              <option>All Schemes</option>
+              <option>IGNOAPS</option>
+              <option>Karunya</option>
+              <option>Disability Allowance</option>
+            </select>
+            <select class="form-select filter-select" id="filter-status" onchange="loadBeneficiaries()">
+              <option>All Status</option>
+              <option>Verified</option>
+              <option>Pending</option>
+              <option>Flagged</option>
+            </select>
+          </div>
+          <button class="btn btn-primary-custom" onclick="showPage('add')">
+            <i class="bi bi-plus-lg me-1"></i> Add Beneficiary
+          </button>
+        </div>
+
+        <!-- Active Filter Badge Bar -->
+        <div id="active-filters-bar" class="d-none mb-3"></div>
+
+        <!-- Beneficiary Cards Grid -->
+        <div class="d-flex flex-wrap gap-3" id="beneficiary-grid">
+
+          <div class="welfare-card" onclick="openProfile('omana')">
+            <div class="wc-header">
+              <div class="wc-avatar female-av">OP</div>
+              <div class="wc-id-area">
+                <div class="wc-id">JR-2024-0041</div>
+                <div class="wc-panchayat">Kazhakuttam GP</div>
+              </div>
+              <span class="wc-status urgent-status"><i class="bi bi-exclamation-circle-fill"></i> Urgent</span>
+            </div>
+            <div class="wc-name">Omana Pillai</div>
+            <div class="wc-meta d-flex gap-3 flex-wrap">
+              <span><i class="bi bi-cake2-fill text-muted me-1"></i>78 years</span>
+              <span><i class="bi bi-geo-fill text-muted me-1"></i>Ward 4</span>
+              <span><i class="bi bi-telephone-fill text-muted me-1"></i>9447XXXXXX</span>
+            </div>
+            <div class="wc-tags d-flex flex-wrap gap-1 my-2">
+              <span class="tag elderly-tag">Elderly</span>
+              <span class="tag bedridden-tag">Bedridden</span>
+            </div>
+            <div class="wc-schemes">
+              <div class="scheme-chip active-scheme"><i class="bi bi-check-circle-fill"></i> IGNOAPS</div>
+              <div class="scheme-chip active-scheme"><i class="bi bi-check-circle-fill"></i> FSC</div>
+              <div class="scheme-chip missing-scheme"><i class="bi bi-x-circle-fill"></i> Karunya</div>
+            </div>
+            <div class="wc-footer d-flex justify-content-between align-items-center mt-2">
+              <span class="last-updated"><i class="bi bi-clock-history me-1"></i>Updated 2d ago</span>
+              <div class="d-flex gap-2">
+                <button class="wc-btn" title="Call"><i class="bi bi-telephone"></i></button>
+                <button class="wc-btn" title="Edit"><i class="bi bi-pencil"></i></button>
+                <button class="wc-btn accent" title="View"><i class="bi bi-eye-fill"></i></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="welfare-card">
+            <div class="wc-header">
+              <div class="wc-avatar male-av">RK</div>
+              <div class="wc-id-area">
+                <div class="wc-id">JR-2024-0089</div>
+                <div class="wc-panchayat">Kazhakuttam GP</div>
+              </div>
+              <span class="wc-status ok-status"><i class="bi bi-patch-check-fill"></i> Verified</span>
+            </div>
+            <div class="wc-name">Rajan Krishnan</div>
+            <div class="wc-meta d-flex gap-3 flex-wrap">
+              <span><i class="bi bi-cake2-fill text-muted me-1"></i>63 years</span>
+              <span><i class="bi bi-geo-fill text-muted me-1"></i>Ward 7</span>
+              <span><i class="bi bi-telephone-fill text-muted me-1"></i>9496XXXXXX</span>
+            </div>
+            <div class="wc-tags d-flex flex-wrap gap-1 my-2">
+              <span class="tag pwd-tag">PwD – Locomotor</span>
+              <span class="tag">40% Disability</span>
+            </div>
+            <div class="wc-schemes">
+              <div class="scheme-chip active-scheme"><i class="bi bi-check-circle-fill"></i> Disability Allowance</div>
+              <div class="scheme-chip active-scheme"><i class="bi bi-check-circle-fill"></i> Karunya</div>
+              <div class="scheme-chip active-scheme"><i class="bi bi-check-circle-fill"></i> FSC</div>
+            </div>
+            <div class="wc-footer d-flex justify-content-between align-items-center mt-2">
+              <span class="last-updated"><i class="bi bi-clock-history me-1"></i>Updated 5d ago</span>
+              <div class="d-flex gap-2">
+                <button class="wc-btn" title="Call"><i class="bi bi-telephone"></i></button>
+                <button class="wc-btn" title="Edit"><i class="bi bi-pencil"></i></button>
+                <button class="wc-btn accent" title="View"><i class="bi bi-eye-fill"></i></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="welfare-card">
+            <div class="wc-header">
+              <div class="wc-avatar female-av">SC</div>
+              <div class="wc-id-area">
+                <div class="wc-id">JR-2025-0112</div>
+                <div class="wc-panchayat">Kazhakuttam GP</div>
+              </div>
+              <span class="wc-status pending-status"><i class="bi bi-hourglass-split"></i> Pending</span>
+            </div>
+            <div class="wc-name">Sarada Chandran</div>
+            <div class="wc-meta d-flex gap-3 flex-wrap">
+              <span><i class="bi bi-cake2-fill text-muted me-1"></i>81 years</span>
+              <span><i class="bi bi-geo-fill text-muted me-1"></i>Ward 1</span>
+              <span><i class="bi bi-telephone-fill text-muted me-1"></i>—</span>
+            </div>
+            <div class="wc-tags d-flex flex-wrap gap-1 my-2">
+              <span class="tag elderly-tag">Elderly</span>
+              <span class="tag widow-tag">Widow</span>
+            </div>
+            <div class="wc-schemes">
+              <div class="scheme-chip active-scheme"><i class="bi bi-check-circle-fill"></i> IGNOAPS</div>
+              <div class="scheme-chip missing-scheme"><i class="bi bi-x-circle-fill"></i> Karunya</div>
+              <div class="scheme-chip missing-scheme"><i class="bi bi-x-circle-fill"></i> FSC</div>
+            </div>
+            <div class="wc-footer d-flex justify-content-between align-items-center mt-2">
+              <span class="last-updated"><i class="bi bi-clock-history me-1"></i>Added today</span>
+              <div class="d-flex gap-2">
+                <button class="wc-btn" title="Call"><i class="bi bi-telephone"></i></button>
+                <button class="wc-btn" title="Edit"><i class="bi bi-pencil"></i></button>
+                <button class="wc-btn accent" title="View"><i class="bi bi-eye-fill"></i></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="welfare-card">
+            <div class="wc-header">
+              <div class="wc-avatar male-av">MJ</div>
+              <div class="wc-id-area">
+                <div class="wc-id">JR-2024-0055</div>
+                <div class="wc-panchayat">Kazhakuttam GP</div>
+              </div>
+              <span class="wc-status ok-status"><i class="bi bi-patch-check-fill"></i> Verified</span>
+            </div>
+            <div class="wc-name">Mathew Jose</div>
+            <div class="wc-meta d-flex gap-3 flex-wrap">
+              <span><i class="bi bi-cake2-fill text-muted me-1"></i>69 years</span>
+              <span><i class="bi bi-geo-fill text-muted me-1"></i>Ward 2</span>
+              <span><i class="bi bi-telephone-fill text-muted me-1"></i>9847XXXXXX</span>
+            </div>
+            <div class="wc-tags d-flex flex-wrap gap-1 my-2">
+              <span class="tag elderly-tag">Elderly</span>
+              <span class="tag pwd-tag">PwD – Visual</span>
+            </div>
+            <div class="wc-schemes">
+              <div class="scheme-chip active-scheme"><i class="bi bi-check-circle-fill"></i> IGNOAPS</div>
+              <div class="scheme-chip active-scheme"><i class="bi bi-check-circle-fill"></i> Disability Allowance</div>
+              <div class="scheme-chip active-scheme"><i class="bi bi-check-circle-fill"></i> Karunya</div>
+            </div>
+            <div class="wc-footer d-flex justify-content-between align-items-center mt-2">
+              <span class="last-updated"><i class="bi bi-clock-history me-1"></i>Updated 1w ago</span>
+              <div class="d-flex gap-2">
+                <button class="wc-btn" title="Call"><i class="bi bi-telephone"></i></button>
+                <button class="wc-btn" title="Edit"><i class="bi bi-pencil"></i></button>
+                <button class="wc-btn accent" title="View"><i class="bi bi-eye-fill"></i></button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════
+         PAGE: ADD BENEFICIARY
+    ════════════════════════════════════ -->
+    <div id="page-add" class="page-content">
+      <div class="container-fluid px-4 py-3">
+        <div class="content-card mx-auto" style="max-width:780px">
+          <div class="card-title mb-1">Register New Beneficiary</div>
+          <div class="card-subtitle mb-4">All fields marked * are required</div>
+
+          <!-- Step Indicator -->
+          <div class="step-indicator d-flex mb-4 gap-0">
+            <div class="step-item active-step">
+              <div class="step-circle">1</div>
+              <div class="step-label">Personal Info</div>
+            </div>
+            <div class="step-line"></div>
+            <div class="step-item">
+              <div class="step-circle">2</div>
+              <div class="step-label">Health & Disability</div>
+            </div>
+            <div class="step-line"></div>
+            <div class="step-item">
+              <div class="step-circle">3</div>
+              <div class="step-label">Schemes & Documents</div>
+            </div>
+          </div>
+
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Full Name *</label>
+              <input type="text" id="add-name" class="form-control custom-input" placeholder="As per Aadhaar"/>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Age *</label>
+              <input type="number" id="add-age" class="form-control custom-input" placeholder="e.g. 72"/>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Gender *</label>
+              <select id="add-gender" class="form-select custom-input">
+                <option>Select</option>
+                <option>Female</option>
+                <option>Male</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Aadhaar Number *</label>
+              <input type="text" id="add-aadhaar" class="form-control custom-input" placeholder="XXXX-XXXX-XXXX"/>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Mobile Number</label>
+              <input type="tel" id="add-mobile" class="form-control custom-input" placeholder="Caregiver's number if none"/>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Ward *</label>
+              <select id="add-ward" class="form-select custom-input">
+                <option>Select Ward</option>
+                <option>Ward 1</option><option>Ward 2</option><option>Ward 3</option>
+                <option>Ward 4</option><option>Ward 5</option><option>Ward 6</option>
+                <option>Ward 7</option><option>Ward 8</option>
+              </select>
+            </div>
+            <div class="col-md-8">
+              <label class="form-label">House Address *</label>
+              <input type="text" id="add-address" class="form-control custom-input" placeholder="House name, street, locality"/>
+            </div>
+            <div class="col-12">
+              <label class="form-label">Category *</label>
+              <div class="d-flex gap-3 flex-wrap" id="add-categories">
+                <div class="category-chip" data-val="Elderly" onclick="toggleChip(this)">
+                  <i class="bi bi-person-heart"></i> Elderly (60+)
+                </div>
+                <div class="category-chip" data-val="PwD" onclick="toggleChip(this)">
+                  <i class="bi bi-person-wheelchair"></i> Person with Disability
+                </div>
+                <div class="category-chip" data-val="Bedridden" onclick="toggleChip(this)">
+                  <i class="bi bi-house-heart"></i> Bedridden / Homebound
+                </div>
+                <div class="category-chip" data-val="Widow" onclick="toggleChip(this)">
+                  <i class="bi bi-person-standing-dress"></i> Widow / Widower
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <label class="form-label">Caregiver / Emergency Contact</label>
+              <div class="row g-2">
+                <div class="col-md-6">
+                  <input type="text" id="add-caregiver-name" class="form-control custom-input" placeholder="Caregiver name"/>
+                </div>
+                <div class="col-md-6">
+                  <input type="tel" id="add-caregiver-mobile" class="form-control custom-input" placeholder="Caregiver mobile"/>
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <label class="form-label">Additional Notes</label>
+              <textarea id="add-notes" class="form-control custom-input" rows="3" placeholder="Any special circumstances, access issues, etc."></textarea>
+            </div>
+            <div class="col-12 d-flex justify-content-between mt-2">
+              <button class="btn btn-outline-secondary" onclick="showPage('beneficiaries')">Cancel</button>
+              <div class="d-flex gap-2">
+                <button class="btn btn-primary-custom" onclick="submitBeneficiary()">Register Beneficiary <i class="bi bi-check-lg ms-1"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════
+         PAGE: HEALTH CAMPS
+    ════════════════════════════════════ -->
+    <div id="page-camps" class="page-content">
+      <div class="container-fluid px-4 py-3">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <div>
+            <div class="section-title">Health Camps</div>
+            <div class="section-sub">Plan and track medical outreach for your ward</div>
+          </div>
+          <button class="btn btn-primary-custom"><i class="bi bi-plus-lg me-1"></i> Schedule Camp</button>
+        </div>
+
+        <div class="d-flex flex-wrap gap-3">
+          <div class="camp-card upcoming-camp flex-fill" style="min-width:280px">
+            <div class="camp-date-badge">
+              <div class="camp-month">JUL</div>
+              <div class="camp-day">05</div>
+            </div>
+            <div class="camp-body">
+              <div class="camp-title">General Health Screening</div>
+              <div class="camp-location"><i class="bi bi-geo-alt-fill me-1"></i>Ward 5 Community Hall</div>
+              <div class="camp-meta d-flex gap-3 flex-wrap mt-2">
+                <span><i class="bi bi-people me-1"></i>48 invited</span>
+                <span><i class="bi bi-clock me-1"></i>9:00 AM – 1:00 PM</span>
+              </div>
+              <div class="d-flex gap-2 mt-3">
+                <span class="camp-tag blood">Blood Pressure</span>
+                <span class="camp-tag diabetes">Diabetes</span>
+                <span class="camp-tag eye">Eye Check</span>
+              </div>
+              <div class="camp-actions d-flex gap-2 mt-3">
+                <button class="btn-camp-action"><i class="bi bi-bell me-1"></i>Send Reminders</button>
+                <button class="btn-camp-action"><i class="bi bi-pencil me-1"></i>Edit</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="camp-card completed-camp flex-fill" style="min-width:280px">
+            <div class="camp-date-badge completed-badge">
+              <div class="camp-month">JUN</div>
+              <div class="camp-day">12</div>
+            </div>
+            <div class="camp-body">
+              <div class="camp-title">Physiotherapy Outreach</div>
+              <div class="camp-location"><i class="bi bi-geo-alt-fill me-1"></i>Ward 3 Anganwadi Centre</div>
+              <div class="camp-meta d-flex gap-3 flex-wrap mt-2">
+                <span><i class="bi bi-people me-1"></i>31 attended / 36 invited</span>
+                <span><i class="bi bi-check-circle-fill text-success me-1"></i>Completed</span>
+              </div>
+              <div class="d-flex gap-2 mt-3">
+                <span class="camp-tag physio">Physiotherapy</span>
+                <span class="camp-tag mobility">Mobility</span>
+              </div>
+              <div class="camp-actions d-flex gap-2 mt-3">
+                <button class="btn-camp-action"><i class="bi bi-file-text me-1"></i>View Report</button>
+                <button class="btn-camp-action"><i class="bi bi-arrow-repeat me-1"></i>Reschedule</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="camp-card planned-camp flex-fill" style="min-width:280px">
+            <div class="camp-date-badge planned-badge">
+              <div class="camp-month">AUG</div>
+              <div class="camp-day">22</div>
+            </div>
+            <div class="camp-body">
+              <div class="camp-title">Mental Wellness Session</div>
+              <div class="camp-location"><i class="bi bi-geo-alt-fill me-1"></i>Ward 7 Panchayat Office</div>
+              <div class="camp-meta d-flex gap-3 flex-wrap mt-2">
+                <span><i class="bi bi-people me-1"></i>Auto-select in progress</span>
+                <span><i class="bi bi-pencil-square me-1"></i>Draft</span>
+              </div>
+              <div class="d-flex gap-2 mt-3">
+                <span class="camp-tag mental">Mental Health</span>
+                <span class="camp-tag counselling">Counselling</span>
+              </div>
+              <div class="camp-actions d-flex gap-2 mt-3">
+                <button class="btn-camp-action"><i class="bi bi-person-plus me-1"></i>Add Beneficiaries</button>
+                <button class="btn-camp-action"><i class="bi bi-pencil me-1"></i>Edit</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════
+         PAGE: SCHEMES
+    ════════════════════════════════════ -->
+    <div id="page-schemes" class="page-content">
+      <div class="container-fluid px-4 py-3">
+        <div class="section-title mb-4">Welfare Schemes</div>
+        <div class="d-flex flex-wrap gap-3">
+          <div class="scheme-card flex-fill" style="min-width:260px">
+            <div class="sc-top d-flex justify-content-between align-items-start">
+              <div class="sc-icon teal-icon"><i class="bi bi-currency-rupee"></i></div>
+              <span class="sc-coverage-badge">82% covered</span>
+            </div>
+            <div class="sc-name">Indira Gandhi National Old Age Pension (IGNOAPS)</div>
+            <div class="sc-desc">Monthly pension of ₹600 for BPL elderly above 60 years</div>
+            <div class="sc-stats d-flex gap-3 mt-3">
+              <div><div class="sc-stat-num">703</div><div class="sc-stat-label">Enrolled</div></div>
+              <div><div class="sc-stat-num sc-red">158</div><div class="sc-stat-label">Eligible, not enrolled</div></div>
+            </div>
+            <button class="btn btn-primary-custom w-100 mt-3 btn-sm" onclick="identifyMissing('IGNOAPS')">Identify Missing Beneficiaries</button>
+          </div>
+          <div class="scheme-card flex-fill" style="min-width:260px">
+            <div class="sc-top d-flex justify-content-between align-items-start">
+              <div class="sc-icon amber-icon"><i class="bi bi-heart-pulse-fill"></i></div>
+              <span class="sc-coverage-badge">74% covered</span>
+            </div>
+            <div class="sc-name">Karunya Health Scheme</div>
+            <div class="sc-desc">Kerala state scheme providing medical assistance up to ₹2 lakh/year</div>
+            <div class="sc-stats d-flex gap-3 mt-3">
+              <div><div class="sc-stat-num">924</div><div class="sc-stat-label">Enrolled</div></div>
+              <div><div class="sc-stat-num sc-red">324</div><div class="sc-stat-label">Eligible, not enrolled</div></div>
+            </div>
+            <button class="btn btn-primary-custom w-100 mt-3 btn-sm" onclick="identifyMissing('Karunya')">Identify Missing Beneficiaries</button>
+          </div>
+          <div class="scheme-card flex-fill" style="min-width:260px">
+            <div class="sc-top d-flex justify-content-between align-items-start">
+              <div class="sc-icon green-icon"><i class="bi bi-person-wheelchair"></i></div>
+              <span class="sc-coverage-badge">61% covered</span>
+            </div>
+            <div class="sc-name">Disability Allowance Scheme</div>
+            <div class="sc-desc">Monthly allowance of ₹1,600 for persons with 40%+ disability</div>
+            <div class="sc-stats d-flex gap-3 mt-3">
+              <div><div class="sc-stat-num">236</div><div class="sc-stat-label">Enrolled</div></div>
+              <div><div class="sc-stat-num sc-red">151</div><div class="sc-stat-label">Eligible, not enrolled</div></div>
+            </div>
+            <button class="btn btn-primary-custom w-100 mt-3 btn-sm" onclick="identifyMissing('Disability Allowance')">Identify Missing Beneficiaries</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════
+         PAGE: ANALYTICS
+    ════════════════════════════════════ -->
+    <div id="page-analytics" class="page-content">
+      <div class="container-fluid px-4 py-3">
+        <div class="section-title mb-4">Analytics & Reports</div>
+        <div class="d-flex flex-wrap gap-3">
+          <div class="content-card flex-grow-1" style="min-width:300px">
+            <div class="card-title mb-3">Age Distribution</div>
+            <div class="age-chart">
+              <div class="age-bar-row"><span class="age-label">60–65</span><div class="age-bar-wrap"><div class="age-bar-fill" style="width:45%">45%</div></div><span class="age-count">286</span></div>
+              <div class="age-bar-row"><span class="age-label">66–70</span><div class="age-bar-wrap"><div class="age-bar-fill" style="width:28%">28%</div></div><span class="age-count">178</span></div>
+              <div class="age-bar-row"><span class="age-label">71–75</span><div class="age-bar-wrap"><div class="age-bar-fill amber-fill" style="width:19%">19%</div></div><span class="age-count">121</span></div>
+              <div class="age-bar-row"><span class="age-label">76–80</span><div class="age-bar-wrap"><div class="age-bar-fill amber-fill" style="width:15%">15%</div></div><span class="age-count">95</span></div>
+              <div class="age-bar-row"><span class="age-label">80+</span><div class="age-bar-wrap"><div class="age-bar-fill red-fill" style="width:28%">28%</div></div><span class="age-count">181</span></div>
+            </div>
+          </div>
+          <div class="content-card" style="min-width:240px;flex:0 1 300px">
+            <div class="card-title mb-3">Category Split</div>
+            <div class="donut-area d-flex flex-column align-items-center justify-content-center gap-3">
+              <svg width="140" height="140" viewBox="0 0 140 140">
+                <circle cx="70" cy="70" r="55" fill="none" stroke="#e2e8f0" stroke-width="22"/>
+                <circle cx="70" cy="70" r="55" fill="none" stroke="#0D5E6D" stroke-width="22"
+                  stroke-dasharray="218 127" stroke-dashoffset="0" stroke-linecap="round"/>
+                <circle cx="70" cy="70" r="55" fill="none" stroke="#E8892B" stroke-width="22"
+                  stroke-dasharray="97 248" stroke-dashoffset="-218" stroke-linecap="round"/>
+                <circle cx="70" cy="70" r="55" fill="none" stroke="#3dab72" stroke-width="22"
+                  stroke-dasharray="30 315" stroke-dashoffset="-315" stroke-linecap="round"/>
+                <text x="70" y="74" text-anchor="middle" font-size="14" font-weight="700" fill="#1A2B2F">1,248</text>
+                <text x="70" y="88" text-anchor="middle" font-size="9" fill="#64748b">total</text>
+              </svg>
+              <div class="legend d-flex flex-column gap-2 w-100">
+                <div class="legend-row"><span class="legend-dot teal-dot"></span> Elderly only <span class="ms-auto fw-600">861</span></div>
+                <div class="legend-row"><span class="legend-dot amber-dot"></span> PwD only <span class="ms-auto fw-600">292</span></div>
+                <div class="legend-row"><span class="legend-dot green-dot"></span> Both <span class="ms-auto fw-600">95</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="content-card flex-grow-1" style="min-width:300px">
+            <div class="card-title mb-3">Monthly Registrations (2026)</div>
+            <div class="monthly-bars d-flex align-items-end gap-2" style="height:140px">
+              <div class="mo-bar-wrap"><div class="mo-bar" style="height:55%"></div><div class="mo-label">Jan</div></div>
+              <div class="mo-bar-wrap"><div class="mo-bar" style="height:40%"></div><div class="mo-label">Feb</div></div>
+              <div class="mo-bar-wrap"><div class="mo-bar" style="height:65%"></div><div class="mo-label">Mar</div></div>
+              <div class="mo-bar-wrap"><div class="mo-bar" style="height:80%"></div><div class="mo-label">Apr</div></div>
+              <div class="mo-bar-wrap"><div class="mo-bar amber-mo" style="height:100%"></div><div class="mo-label">May</div></div>
+              <div class="mo-bar-wrap"><div class="mo-bar" style="height:68%"></div><div class="mo-label">Jun</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- placeholder pages -->
+    <div id="page-alerts" class="page-content">
+      <div class="container-fluid px-4 py-3">
+        <div class="section-title mb-3">Alerts & Notifications</div>
+        <div class="content-card">
+          <div class="alert-list">
+            <div class="alert-item urgent">
+              <div class="alert-dot"></div>
+              <div class="flex-grow-1">
+                <div class="alert-name">Omana P. (W-4) — Pension Lapsed</div>
+                <div class="alert-desc">No IGNOAPS disbursement for 2 consecutive months. Immediate verification required with bank branch.</div>
+              </div>
+              <span class="alert-tag urgent-tag">Urgent</span>
+            </div>
+            <div class="alert-item warning">
+              <div class="alert-dot warning-dot"></div>
+              <div class="flex-grow-1">
+                <div class="alert-name">Rajan K. (W-7) — Certificate Expiry</div>
+                <div class="alert-desc">Medical disability certificate expires 11 July 2026. Schedule renewal with District Medical Board.</div>
+              </div>
+              <span class="alert-tag warning-tag">Renewal</span>
+            </div>
+            <div class="alert-item warning">
+              <div class="alert-dot warning-dot"></div>
+              <div class="flex-grow-1">
+                <div class="alert-name">3 Beneficiaries in Ward 2 — Scheme Gap</div>
+                <div class="alert-desc">Eligible for Karunya scheme based on income records. Enrollment pending for Sumathi R., Gopalan V., and Leela M.</div>
+              </div>
+              <span class="alert-tag info-tag">Scheme</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="page-export" class="page-content">
+      <div class="container-fluid px-4 py-3">
+        <div class="section-title mb-3">Export Data</div>
+        <div class="content-card" style="max-width:480px">
+          <p class="text-muted mb-3">Export beneficiary data for offline use or departmental reporting.</p>
+          <div class="d-flex flex-column gap-3">
+            <button class="btn btn-primary-custom"><i class="bi bi-file-earmark-spreadsheet me-2"></i>Export All Beneficiaries (.xlsx)</button>
+            <button class="btn btn-outline-primary-custom"><i class="bi bi-file-earmark-pdf me-2"></i>Ward-wise Report (.pdf)</button>
+            <button class="btn btn-outline-primary-custom"><i class="bi bi-file-earmark-text me-2"></i>Scheme Gap Analysis (.csv)</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- PROFILE MODAL -->
+<div class="modal-overlay" id="profileModal" onclick="closeModal(event)">
+  <div class="profile-modal" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="document.getElementById('profileModal').style.display='none'"><i class="bi bi-x-lg"></i></button>
+    <div class="pm-header d-flex gap-3 align-items-center mb-3">
+      <div class="pm-avatar female-av">OP</div>
+      <div>
+        <div class="pm-name">Omana Pillai</div>
+        <div class="pm-id">JR-2024-0041 · Kazhakuttam GP</div>
+        <span class="wc-status urgent-status mt-1 d-inline-flex"><i class="bi bi-exclamation-circle-fill me-1"></i> Urgent Follow-up</span>
+      </div>
+    </div>
+    <div class="row g-3 mb-3">
+      <div class="col-6"><div class="pm-field-label">Age</div><div class="pm-field-val">78 years</div></div>
+      <div class="col-6"><div class="pm-field-label">Gender</div><div class="pm-field-val">Female</div></div>
+      <div class="col-6"><div class="pm-field-label">Ward</div><div class="pm-field-val">Ward 4</div></div>
+      <div class="col-6"><div class="pm-field-label">Mobile</div><div class="pm-field-val">9447XXXXXX</div></div>
+      <div class="col-12"><div class="pm-field-label">Address</div><div class="pm-field-val">Krishnavilasam, Near Temple Rd, Ward 4</div></div>
+      <div class="col-6"><div class="pm-field-label">Caregiver</div><div class="pm-field-val">Sindhu (daughter)</div></div>
+      <div class="col-6"><div class="pm-field-label">Caregiver Mobile</div><div class="pm-field-val">9847XXXXXX</div></div>
+    </div>
+    <div class="pm-section-label">Active Schemes</div>
+    <div class="d-flex gap-2 flex-wrap mb-3">
+      <div class="scheme-chip active-scheme"><i class="bi bi-check-circle-fill"></i> IGNOAPS</div>
+      <div class="scheme-chip active-scheme"><i class="bi bi-check-circle-fill"></i> Food Security Card</div>
+      <div class="scheme-chip missing-scheme"><i class="bi bi-x-circle-fill"></i> Karunya (not enrolled)</div>
+    </div>
+    <div class="pm-alert-box"><i class="bi bi-exclamation-triangle-fill me-2"></i>IGNOAPS pension not disbursed for 2 months. Verify with SBI Kazhakuttam branch.</div>
+    <div class="d-flex gap-2 mt-3 flex-wrap">
+      <button class="btn btn-primary-custom btn-sm"><i class="bi bi-telephone me-1"></i>Call Beneficiary</button>
+      <button class="btn btn-outline-primary-custom btn-sm"><i class="bi bi-pencil me-1"></i>Edit Record</button>
+      <button class="btn btn-outline-primary-custom btn-sm"><i class="bi bi-patch-check me-1"></i>Mark Resolved</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+<script type="module" src="app.js"></script>
+</body>
+</html>
